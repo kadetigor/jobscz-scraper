@@ -1,5 +1,5 @@
 import puppeteer, { Browser, Page } from 'puppeteer';
-import * as ph from 'puppethelper';
+import * as ph from './src/puppethelper';
 import chalk from 'chalk';
 import fs, { WriteStream } from 'fs';
 //import { MongoClient, Db, Collection} from 'mongodb';
@@ -19,6 +19,7 @@ import {write} from './src/functions/write';
 import {DEBUG} from './src/constants/DEBUG';
 
 (async(): Promise<void> => {
+    try {
     /*
     const client: MongoClient = new MongoClient(dbUrl);
     await client.connect();
@@ -28,15 +29,10 @@ import {DEBUG} from './src/constants/DEBUG';
     let params: Parameters;
     if (process.argv.length === 2) {
         try {
-            import('../web/job-params.json')
-                .then(parametersData => {
-                    params = parametersData.default as unknown as Parameters;
-                })
-                .catch(e => {
-                    params = parseArgs();
-                });
+            const parametersData = await import('../web/job-params.json');
+            params = parametersData.default as unknown as Parameters;
         } catch(e) {
-            // this stays empty
+            params = parseArgs();
         }
 
         /*
@@ -73,8 +69,15 @@ import {DEBUG} from './src/constants/DEBUG';
 
     while (true) {
         const postSelector: string = `html > body > div article:nth-of-type(${postNo})`;
+        const titleSelector: string = `${postSelector} > header > h2 > a`;
+        const companySelector: string = `${postSelector} > footer > ul > li:nth-of-type(1) > span`;
+        const locationSelector: string = `${postSelector} > footer > ul > li:nth-of-type(2)`;
+
         try {
             await ph.waitForSelector(page, postSelector, 'css', 1);
+
+            post.title = await ph.getText(page, titleSelector);
+            post.url = await ph.getAttribute(page, titleSelector, 'href');
         } catch(e) {
             try {
                 await ph.click(page, nextPageSelector, 'css', 1);
@@ -89,13 +92,6 @@ import {DEBUG} from './src/constants/DEBUG';
                 break;
             }
         }
-
-        const titleSelector: string = `${postSelector} > header > h2 > a`;
-        const companySelector: string = `${postSelector} > footer > ul > li:nth-of-type(1) > span`;
-        const locationSelector: string = `${postSelector} > footer > ul > li:nth-of-type(2)`;
-
-        post.title = await ph.getText(page, titleSelector);
-        post.url = await ph.getAttribute(page, titleSelector, 'href');
         await getSalary(page, post, postSelector);
         await getTags(page, post, postSelector);
         post.company = await ph.getText(page, companySelector);
@@ -119,4 +115,8 @@ import {DEBUG} from './src/constants/DEBUG';
     //await client.close();
 
     await browser.close();
+    } catch (error) {
+        console.error(chalk.red('Fatal error:'), error);
+        process.exit(1);
+    }
 })()

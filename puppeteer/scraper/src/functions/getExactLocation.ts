@@ -1,5 +1,5 @@
 import {Page} from 'puppeteer';
-import * as ph from 'puppethelper';
+import * as ph from '../puppethelper';
 import {Post} from '../interfaces/Post';
 
 async function getExactLocation(page: Page, post: Post, titleSelector: string, exactLocationSelector: string): Promise<void> {

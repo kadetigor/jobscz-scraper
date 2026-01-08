@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  jobscz-scraper:
+    build: .
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./puppeteer/scraper/job-posts.json:/app/scraper/job-posts.json
+      - ./puppeteer/web/job-params.json:/app/web/job-params.json
+    cap_add:
+      - SYS_ADMIN
