@@ -35,8 +35,9 @@ function getChromePath(): string | undefined {
 
 // Browser launch options
 export const BROWSER_OPTS: PuppeteerLaunchOptions = {
-    headless: true, // Set to true for server environments
+    headless: 'new', // Use new headless mode
     executablePath: getChromePath(),
+    protocolTimeout: 180000, // 3 minutes timeout for protocol operations
     args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
