@@ -1,7 +1,7 @@
 import puppeteer, { Browser, Page } from 'puppeteer';
-import * as ph from './src/puppethelper';
+import * as ph from './src/puppethelper.js';
 import chalk from 'chalk';
-import { DEBUG } from './src/constants/DEBUG';
+import { DEBUG } from './src/constants/DEBUG.js';
 
 export interface JobDetail {
     url: string;

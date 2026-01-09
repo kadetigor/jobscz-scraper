@@ -5,7 +5,12 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { exec } from 'child_process';
 import http from 'http';
-import { scrapeJobDetail, JobDetail } from '../scraper/detail-scraper.js';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+
+// Import CommonJS module using require
+const { scrapeJobDetail } = require('../scraper/detail-scraper.ts');
 
 //import { MongoClient, Db} from 'mongodb';
 const dbUrl: string = 'mongodb://localhost:27017';
@@ -150,7 +155,7 @@ app.post('/api/scrape/detail', async (req: Request, res: Response): Promise<void
     }
 
     try {
-        const jobDetail: JobDetail = await scrapeJobDetail(url);
+        const jobDetail = await scrapeJobDetail(url);
 
         res.json({
             success: true,
