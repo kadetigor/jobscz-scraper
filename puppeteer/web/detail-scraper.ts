@@ -23,25 +23,34 @@ function sanitizeString(str: string | undefined): string | undefined {
         .trim();
 }
 
-const BROWSER_OPTS = {
-    headless: true,
-    executablePath: process.platform === 'darwin'
-        ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-        : '/usr/bin/chromium-browser',
-    protocolTimeout: 180000,
-    args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--single-process',
-        '--disable-gpu',
-        '--disable-software-rasterizer',
-        '--disable-extensions'
-    ]
+// Try to use system Chrome on macOS, otherwise let Puppeteer use its bundled browser
+const getBrowserOptions = () => {
+    const options: any = {
+        headless: true,
+        protocolTimeout: 180000,
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process',
+            '--disable-gpu',
+            '--disable-software-rasterizer',
+            '--disable-extensions'
+        ]
+    };
+
+    // Only set executablePath on macOS, let Puppeteer use bundled Chrome on Linux
+    if (process.platform === 'darwin') {
+        options.executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+    }
+
+    return options;
 };
+
+const BROWSER_OPTS = getBrowserOptions();
 
 const DEFAULT_TIMEOUT = 60000;
 
