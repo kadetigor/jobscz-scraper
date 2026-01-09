@@ -29,8 +29,9 @@ import {DEBUG} from './src/constants/DEBUG';
     let params: Parameters;
     if (process.argv.length === 2) {
         try {
-            const parametersData = await import('../web/job-params.json');
-            params = parametersData.default as unknown as Parameters;
+            const jobParamsPath = './job-params.json';
+            const parametersData = JSON.parse(fs.readFileSync(jobParamsPath, 'utf-8'));
+            params = parametersData as Parameters;
         } catch(e) {
             params = parseArgs();
         }
