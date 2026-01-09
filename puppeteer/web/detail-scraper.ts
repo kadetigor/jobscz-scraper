@@ -24,8 +24,8 @@ function sanitizeString(str: string | undefined): string | undefined {
 }
 
 const BROWSER_OPTS = {
-    headless: 'new' as const,
-    executablePath: process.platform === 'darwin' 
+    headless: true,
+    executablePath: process.platform === 'darwin'
         ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
         : '/usr/bin/chromium-browser',
     protocolTimeout: 180000,
@@ -36,7 +36,10 @@ const BROWSER_OPTS = {
         '--disable-accelerated-2d-canvas',
         '--no-first-run',
         '--no-zygote',
-        '--disable-gpu'
+        '--single-process',
+        '--disable-gpu',
+        '--disable-software-rasterizer',
+        '--disable-extensions'
     ]
 };
 
