@@ -1,8 +1,9 @@
 {
   "name": "jobscz-scraper",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "start": "ts-node index.ts"
+    "start": "node --loader ts-node/esm index.ts"
   },
   "dependencies": {
     "chalk": "^4.1.2",
