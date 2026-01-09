@@ -5,12 +5,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { exec } from 'child_process';
 import http from 'http';
-import { createRequire } from 'module';
-
-const require = createRequire(import.meta.url);
-
-// Import CommonJS module using require
-const { scrapeJobDetail } = require('../scraper/detail-scraper.ts');
+import { scrapeJobDetail } from './detail-scraper.js';
 
 //import { MongoClient, Db} from 'mongodb';
 const dbUrl: string = 'mongodb://localhost:27017';
